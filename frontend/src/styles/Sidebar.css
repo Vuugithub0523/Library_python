@@ -16,8 +16,8 @@
 }
 
 .logo {
-  width: 180px; /* Increased from 126px */
-  height: 180px; /* Increased from 126px */
+  width: 126px;
+  height: 126px;
   margin-bottom: 0px;
   object-fit: contain;
 }
