@@ -28,7 +28,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 2rem;
+  padding: 1.0rem 2.0rem;
   transition: all 0.3s ease;
   z-index: 1000;
 }
@@ -43,6 +43,7 @@ body {
 .logo {
   display: flex;
   align-items: center;
+  height: 50px;
 }
 
 .logo-img {
@@ -51,11 +52,7 @@ body {
   margin-right: 0.5rem;
 }
 
-.logo-text {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #3b82f6;
-}
+
 
 .nav-links {
   display: flex;
