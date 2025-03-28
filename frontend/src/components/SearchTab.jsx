@@ -1,115 +1,67 @@
-import React from "react";
-import { Container, Row, Col, Table, Button, Badge } from "react-bootstrap";
-import { useNavigate } from "react-router-dom"; // Thay useHistory bằng useNavigate
-import "../styles/BookTable.css"; // Đảm bảo đã tạo tệp CSS
+"use client"
 
-const BookTable = () => {
-  const navigate = useNavigate(); // Khởi tạo useNavigate hook để chuyển hướng
-  const books = [
-    {
-      id: 1, // Thêm ID cho mỗi cuốn sách
-      title: "Don't Make Me Think",
-      author: "Steve Krug",
-      year: "2000",
-      rating: "4.5/5",
-      category: "Computer Science",
-      status: "Available",
-      location: "CS A-15",
-      image: "/book.jpg", // Đảm bảo hình ảnh đã có trong thư mục public
-    },
-    {
-      id: 2,
-      title: "The Design of Everyday Things",
-      author: "Don Norman",
-      year: "1988",
-      rating: "4.5/5",
-      category: "Computer Science",
-      status: "Out of stock",
-      location: "",
-      image: "/book.jpg",
-    },
-    {
-      id: 3,
-      title: "Rich Dad Poor Dad",
-      author: "Robert T. Kiyosaki",
-      year: "1997",
-      rating: "4.5/5",
-      category: "Financial MGMT",
-      status: "Available",
-      location: "CS A-15",
-      image: "/book.jpg",
-    },
-  ];
+import { useState } from "react"
+import "../styles/SearchTab.css"
 
-  const handleViewDetails = (id) => {
-    // Chuyển hướng đến trang BookDetail với id sách
-    navigate(`/book/${id}`);
-  };
+const SearchTab = () => {
+  const [searchQuery, setSearchQuery] = useState("")
 
   return (
-    <Container fluid>
-      <Row className="my-4">
-        <Col>
-          <Table striped bordered hover responsive className="book-table">
-            <thead>
-              <tr className="text-center">
-                <th>Tiêu đề</th>
-                <th>Đánh giá</th>
-                <th>Thể loại</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {books.map((book, index) => (
-                <tr key={book.id}>
-                  <td className="d-flex align-items-center justify-content-start">
-                    <img
-                      src={book.image}
-                      alt={book.title}
-                      style={{
-                        width: "50px",
-                        height: "75px",
-                        marginRight: "15px",
-                        objectFit: "cover",
-                      }}
-                    />
-                    <div>
-                      <div>{book.title}</div>
-                      <div style={{ fontSize: "12px", color: "#888" }}>
-                        {book.author}, {book.year}
-                      </div>
-                    </div>
-                  </td>
-                  <td>{book.rating}</td>
-                  <td>{book.category}</td>
-                  <td className="text-center">
-                    <Badge
-                      bg={book.status === "Available" ? "success" : "danger"}
-                      pill
-                      className="status-badge"
-                    >
-                      {book.status}
-                    </Badge>
-                  </td>
-                  <td className="text-center">
-                    <Button
-                      variant="outline-primary"
-                      size="sm"
-                      className="action-btn"
-                      onClick={() => handleViewDetails(book.id)} // Gọi hàm khi bấm "Xem trước"
-                    >
-                      {"Xem trước"}
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </Col>
-      </Row>
-    </Container>
-  );
-};
+    <div className="search-tab">
+      <h2 className="search-title">Tìm kiếm sách</h2>
 
-export default BookTable;
+      <div className="search-form">
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Nhập tên sách, tác giả hoặc từ khóa..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <button className="search-button">Tìm kiếm</button>
+      </div>
+
+      <div className="search-filters">
+        <div className="filter-group">
+          <label className="filter-label">Thể loại:</label>
+          <select className="filter-select">
+            <option value="">Tất cả</option>
+            <option value="fiction">Tiểu thuyết</option>
+            <option value="non-fiction">Phi hư cấu</option>
+            <option value="science">Khoa học</option>
+            <option value="technology">Công nghệ</option>
+          </select>
+        </div>
+
+        <div className="filter-group">
+          <label className="filter-label">Năm xuất bản:</label>
+          <select className="filter-select">
+            <option value="">Tất cả</option>
+            <option value="2020-2023">2020-2023</option>
+            <option value="2010-2019">2010-2019</option>
+            <option value="2000-2009">2000-2009</option>
+            <option value="before-2000">Trước 2000</option>
+          </select>
+        </div>
+
+        <div className="filter-group">
+          <label className="filter-label">Xếp hạng:</label>
+          <select className="filter-select">
+            <option value="">Tất cả</option>
+            <option value="4-5">4-5 sao</option>
+            <option value="3-4">3-4 sao</option>
+            <option value="2-3">2-3 sao</option>
+            <option value="1-2">1-2 sao</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="search-results">
+        <p className="no-results">Nhập từ khóa để tìm kiếm sách...</p>
+      </div>
+    </div>
+  )
+}
+
+export default SearchTab
+

@@ -1,52 +1,47 @@
-import React from "react";
-import { Nav } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faHome,
-  faSearch,
-  faBook,
-  faHandHoldingHeart,
-} from "@fortawesome/free-solid-svg-icons";
-import "../styles/Sidebar.css";
+"use client"
+import "../styles/SideBar.css"
 
-const Sidebar = ({ onSearchClick }) => {
+const Sidebar = ({ activeView, onNavigate }) => {
   return (
-    <div
-      className={`sidebar expanded`}
-      style={{ position: "fixed", marginTop: "15px" }}
-    >
-      <Nav className="flex-column">
-        <Nav.Item>
-          <Nav.Link href="#" className="nav-item-custom">
-            <FontAwesomeIcon icon={faHome} className="icon" />
-            <span className="nav-text">Trang chủ</span>
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link
-            href="#"
-            className="nav-item-custom"
-            onClick={onSearchClick}
-          >
-            <FontAwesomeIcon icon={faSearch} className="icon" />
-            <span className="nav-text">Tìm kiếm</span>
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link href="#" className="nav-item-custom">
-            <FontAwesomeIcon icon={faBook} className="icon" />
-            <span className="nav-text">Giá sách của tôi</span>
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link href="#" className="nav-item-custom">
-            <FontAwesomeIcon icon={faHandHoldingHeart} className="icon" />
-            <span className="nav-text">Đóng góp</span>
-          </Nav.Link>
-        </Nav.Item>
-      </Nav>
-    </div>
-  );
-};
+    <div className="sidebar">
+      <div className="logo-container">
+        <img src="./logoUnder.png" alt="MYLIB Logo" className="logo" />
+        
+      </div>
 
-export default Sidebar;
+      <nav className="sidebar-nav">
+        <div className={`nav-item ${activeView === "home" ? "active" : ""}`} onClick={() => onNavigate("home")}>
+          <i className="nav-icon">🏠</i>
+          <span>Trang chủ</span>
+        </div>
+        <div className={`nav-item ${activeView === "search" ? "active" : ""}`} onClick={() => onNavigate("search")}>
+          <i className="nav-icon">🔍</i>
+          <span>Tìm kiếm</span>
+        </div>
+        <div
+          className={`nav-item ${activeView === "bookshelf" ? "active" : ""}`}
+          onClick={() => onNavigate("bookshelf")}
+        >
+          <i className="nav-icon">📊</i>
+          <span>Giá sách của tôi</span>
+        </div>
+        <div
+          className={`nav-item ${activeView === "contributions" ? "active" : ""}`}
+          onClick={() => onNavigate("contributions")}
+        >
+          <i className="nav-icon">🎁</i>
+          <span>Đóng góp</span>
+        </div>
+      </nav>
+
+      <div className="sidebar-footer">
+        <div className="footer-item">Về chúng tôi</div>
+        <div className="footer-item">Hỗ trợ</div>
+        <div className="footer-item">Điều khoản & Điều kiện</div>
+      </div>
+    </div>
+  )
+}
+
+export default Sidebar
+

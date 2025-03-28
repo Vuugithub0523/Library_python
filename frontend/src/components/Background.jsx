@@ -15,7 +15,6 @@ const Background = ({ children }) => {
           fontWeight: "bold",
         }}
       >
-        OTP
       </span>
 
       {/* SVG Wave - Chính */}

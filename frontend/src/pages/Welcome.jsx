@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom"
 import "../styles/Welcome.css" // CSS chính
 
@@ -8,15 +8,104 @@ import "../styles/Welcome.css" // CSS chính
 function Welcome() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [parallaxOffset, setParallaxOffset] = useState(0)
+  
+  // Refs for sections
+  const heroRef = useRef(null)
+  const aboutRef = useRef(null)
+  const servicesRef = useRef(null)
+  const booksRef = useRef(null)
+  const blogRef = useRef(null)
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
+  // Function to check if element is in viewport
+  const isInViewport = (element, offset = 150) => {
+    if (!element) return false;
+    const rect = element.getBoundingClientRect();
+    return (
+      rect.top <= window.innerHeight - offset &&
+      rect.bottom >= 0
+    );
+  };
+
+  // Update the useEffect hook
+// Update the useEffect hook
+useEffect(() => {
+  const handleScroll = () => {
+    // Header scroll effect
+    setScrolled(window.scrollY > 50);
+
+    // Parallax effect for hero section
+    if (heroRef.current) {
+      const scrolled = window.pageYOffset;
+      const rate = scrolled * 0.35;
+      setParallaxOffset(rate);
+      heroRef.current.style.transform = `translate3d(0, ${rate}px, 0)`;
     }
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    // Animate sections when they come into view
+    const sections = [
+      { ref: aboutRef, className: 'about-section' },
+      { ref: servicesRef, className: 'services-section' },
+      { ref: booksRef, className: 'books-section' },
+      { ref: blogRef, className: 'blog-section' }
+    ];
+
+    sections.forEach(({ ref, className }) => {
+      if (ref.current) {
+        const isVisible = isInViewport(ref.current);
+        
+        // Toggle visibility classes
+        if (isVisible) {
+          ref.current.classList.add('visible');
+          ref.current.classList.remove('hidden');
+          
+          // Animate children
+          const children = ref.current.querySelectorAll('.feature-card, .service-card, .blog-card, .category-item');
+          children.forEach((child, index) => {
+            setTimeout(() => {
+              child.classList.add('animate-in');
+              child.classList.remove('animate-out');
+            }, index * 100);
+          });
+        } else {
+          ref.current.classList.remove('visible');
+          ref.current.classList.add('hidden');
+          
+          // Reset children animations
+          const children = ref.current.querySelectorAll('.feature-card, .service-card, .blog-card, .category-item');
+          children.forEach((child) => {
+            child.classList.remove('animate-in');
+            child.classList.add('animate-out');
+          });
+        }
+      }
+    });
+  };
+
+  // Add scroll event listener with throttling for better performance
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        handleScroll();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  // Initial check
+  handleScroll();
+
+  // Cleanup
+  return () => {
+    window.removeEventListener('scroll', handleScroll);
+  };
+}, []);
+
+
+
+
 
   const categoryIcons = {
     literature: (
@@ -156,7 +245,7 @@ function Welcome() {
       <header className={`header ${scrolled ? "header-scrolled" : ""}`}>
         <div className="logo">
           <img src="./logo.png" alt="MyLib Logo" className="logo-img" />
-          <span className="logo-text">MyLib</span>
+          
         </div>
 
         {/* Desktop Navigation */}
@@ -255,7 +344,7 @@ function Welcome() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="about-section">
+      <section id="about" ref={aboutRef} className="about-section section-animate">
         <div className="section-header">
           <h2 className="section-title">Về chúng tôi</h2>
           <div className="section-divider"></div>
@@ -338,7 +427,7 @@ function Welcome() {
       </section>
 
       {/* Services Section */}
-      <section id="services" className="services-section">
+      <section id="services" ref={servicesRef} className="services-section section-animate">
         <div className="section-header">
           <h2 className="section-title">Dịch vụ</h2>
           <div className="section-divider"></div>
@@ -374,8 +463,10 @@ function Welcome() {
         </div>
       </section>
 
+
+
       {/* Books Section */}
-      <section id="books" className="books-section">
+      <section id="books" ref={booksRef} className="books-section section-animate">
         <div className="section-header">
           <h2 className="section-title">Danh mục sách</h2>
           <div className="section-divider"></div>
@@ -421,7 +512,7 @@ function Welcome() {
       </section>
 
       {/* Blog Section */}
-      <section id="blog" className="blog-section">
+      <section id="blog" ref={blogRef} className="blog-section section-animate">
         <div className="section-header">
           <h2 className="section-title">Blog</h2>
           <div className="section-divider"></div>
@@ -471,7 +562,7 @@ function Welcome() {
           <div className="footer-section">
             <div className="footer-logo">
               <img src="./logo.png" alt="MyLib Logo" className="footer-logo-img" />
-              <span className="footer-logo-text">MyLib</span>
+              
             </div>
             <p className="footer-description">Thư viện hiện đại, kết nối tri thức và đam mê đọc sách của mọi người.</p>
           </div>
